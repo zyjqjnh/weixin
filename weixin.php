@@ -63,6 +63,10 @@ class wechatCallbackapiTest
                 case 'voice':
                     $result = $this->receiveVoice($postObj);
                     break;
+                case 'video':
+                case 'shortvideo':
+                    $result = $this->receiveVideo($postObj);
+                    break;
             }
 
             echo $result;
@@ -174,6 +178,17 @@ class wechatCallbackapiTest
             $result = $this->transmitVoice($object, $content);
         }
 
+        return $result;
+    }
+
+    /**
+     * 接收视频消息
+     * @param $object
+     * @return string
+     */
+    private function receiveVideo($object) {
+        $content = array('MediaId' => $object->MediaId, 'ThumbMediaId' => $object->ThumbMediaId, 'Title' => '', 'Description' => '');
+        $result = $this->transmitVideo($object, $content);
         return $result;
     }
 
@@ -316,6 +331,35 @@ class wechatCallbackapiTest
                    </xml>";
 
         $result = sprintf($xmlTpl, $object->FromUserName, $object->ToUserName, time());
+        return $result;
+    }
+
+    /**
+     * 回复视频消息
+     * @param $object
+     * @param $videoArray
+     * @return string
+     */
+    private function transmitVideo($object, $videoArray) {
+        $itemTpl = "<Video>
+                      <MediaId><![CDATA[%s]]></MediaId>
+                      <ThumbMediaId><![CDATA[%s]]></ThumbMediaId>
+                      <Title><![CDATA[%s]]></Title>
+                      <Description><![CDATA[%s]]></Description>
+                    </Video>";
+
+        $item_str = sprintf($itemTpl, $videoArray['MediaId'], $videoArray['ThumbMediaId'], $videoArray['Title'], $videoArray['Description']);
+
+        $xmlTpl = "<xml>
+                    <ToUserName><![CDATA[%s]]></ToUserName>
+                    <FromUserName><![CDATA[%s]]></FromUserName>
+                    <CreateTime>%s</CreateTime>
+                    <MsgType><![CDATA[video]]></MsgType>
+                    $item_str
+                   </xml>";
+
+        $result = sprintf($xmlTpl, $object->FromUserName, $object->ToUserName, time());
+
         return $result;
     }
 
