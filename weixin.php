@@ -174,7 +174,7 @@ class wechatCallbackapiTest
             $content = "你刚才说的是：" . $object->Recognition;
             $result = $this->transmitText($object, $content);
         } else {
-            $content = array('MediaId' => $object->MediaId);
+            $content = array("MediaId" => $object->MediaId);
             $result = $this->transmitVoice($object, $content);
         }
 
@@ -327,7 +327,7 @@ class wechatCallbackapiTest
                     <FromUserName><![CDATA[%s]]></FromUserName>
                     <CreateTime>%s</CreateTime>
                     <MsgType><![CDATA[voice]]></MsgType>
-                    $$item_str
+                    $item_str
                    </xml>";
 
         $result = sprintf($xmlTpl, $object->FromUserName, $object->ToUserName, time());
