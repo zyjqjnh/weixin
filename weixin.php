@@ -67,6 +67,12 @@ class wechatCallbackapiTest
                 case 'shortvideo':
                     $result = $this->receiveVideo($postObj);
                     break;
+                case 'link':
+                    $result = $this->receiveLink($postObj);
+                    break;
+                default:
+                    $result = 'unknown msg type: ' . $RX_TYPE;
+                    break;
             }
 
             echo $result;
@@ -189,6 +195,17 @@ class wechatCallbackapiTest
     private function receiveVideo($object) {
         $content = array('MediaId' => $object->MediaId, 'ThumbMediaId' => $object->ThumbMediaId, 'Title' => '', 'Description' => '');
         $result = $this->transmitVideo($object, $content);
+        return $result;
+    }
+
+    /**
+     * 接收链接消息
+     * @param $object
+     * @return string
+     */
+    private function receiveLink($object) {
+        $content = "你发送的是链接，标题为：" . $object->Title . "；内容为：" . $object->Description . "；链接地址为：" . $object->Url;
+        $result = $this->transmitText($object, $content);
         return $result;
     }
 
